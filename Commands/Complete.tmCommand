@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveModifiedFiles</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby18
+
+require "#{ENV['TM_SUPPORT_PATH']}/lib/ui"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/exit_codes"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/process"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/save_current_document"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
+
+TextMate.save_if_untitled('py')
+
+yoda = "#{ENV['TM_BUNDLE_SUPPORT']}/bin/yoda"
+text = File.read(ENV['TM_FILEPATH'])
+line = ENV['TM_LINE_NUMBER']
+column = ENV['TM_LINE_INDEX']
+path = ENV['TM_FILEPATH']
+args = [line, column, path]
+opts = {
+  :input =&gt; text,
+  :env   =&gt; {
+    'PYTHONPATH' =&gt; "#{ENV['TM_BUNDLE_SUPPORT']}/vendor/jedi",
+  },
+}
+out, err = TextMate::Process.run(yoda, args, opts)
+TextMate::exit_show_tool_tip(err) unless err.empty?
+
+choices = OSX::PropertyList.load(out)
+TextMate::UI.complete(choices)
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>~</string>
+	<key>name</key>
+	<string>Complete</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>atCaret</string>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>uuid</key>
+	<string>957D03CC-DD80-4D63-B0E7-3A3B98E8FD91</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

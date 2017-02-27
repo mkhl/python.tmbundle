@@ -1,0 +1,3 @@
+[submodule "vendor/jedi"]
+	path = Support/vendor/jedi
+	url = https://github.com/davidhalter/jedi.git
