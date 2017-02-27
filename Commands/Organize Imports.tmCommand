@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>saveActiveFile</string>
+	<key>command</key>
+	<string>#!/bin/bash
+. "${TM_SUPPORT_PATH}/lib/bash_init.sh"
+
+: ${TM_AUTOFLAKE:=autoflake}
+: ${TM_PY_ISORT:=isort}
+"$TM_AUTOFLAKE" -i "$TM_FILEPATH"
+"$TM_PY_ISORT" "$TM_FILEPATH"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>^H</string>
+	<key>name</key>
+	<string>Organize Imports</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>requiredCommands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>autoflake</string>
+			<key>locations</key>
+			<array>
+				<string>/usr/local/bin/autoflake</string>
+				<string>/opt/local/bin/autoflake</string>
+				<string>$HOME/.local/bin/autoflake</string>
+			</array>
+			<key>variable</key>
+			<string>TM_AUTOFLAKE</string>
+		</dict>
+		<dict>
+			<key>command</key>
+			<string>isort</string>
+			<key>locations</key>
+			<array>
+				<string>/usr/local/bin/isort</string>
+				<string>/opt/local/bin/isort</string>
+				<string>$HOME/.local/bin/isort</string>
+			</array>
+			<key>variable</key>
+			<string>TM_PY_ISORT</string>
+		</dict>
+	</array>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>uuid</key>
+	<string>CB61B4D2-FCB9-4C7D-9FE9-4B6CAFF60D12</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
