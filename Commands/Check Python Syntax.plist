@@ -3,21 +3,33 @@
 <plist version="1.0">
 <dict>
 	<key>beforeRunningCommand</key>
-	<string>saveActiveFile</string>
+	<string>saveModifiedFiles</string>
 	<key>capturePattern</key>
 	<string>^(.*)\s+line:\s+(\d+)\s+col:\s+(\d+).*$</string>
 	<key>columnCaptureRegister</key>
 	<string>3</string>
 	<key>command</key>
-	<string>#!/bin/bash
+	<string>#!/usr/bin/env ruby18 -wKU
 
-TPY=${TM_PYTHON:-python}
+require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/executor"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/save_current_document"
 
-"$TPY" "$TM_BUNDLE_SUPPORT/bin/pycheckmate.py" "$TM_FILEPATH"</string>
+TextMate.save_if_untitled('py')
+
+cmd  = ENV['TM_PYCHECKER'] || 'flake8'
+file = ENV['TM_FILEPATH']
+opts = {
+  :use_hashbang    =&gt; false,
+  :verb            =&gt; 'Checking',
+  :version_replace =&gt; "#{File.basename(cmd)} \\1"
+}
+
+TextMate::Executor.run(cmd, file, opts)
+</string>
 	<key>fileCaptureRegister</key>
 	<string>1</string>
 	<key>input</key>
-	<string>none</string>
+	<string>document</string>
 	<key>inputFormat</key>
 	<string>text</string>
 	<key>keyEquivalent</key>
@@ -25,13 +37,28 @@ TPY=${TM_PYTHON:-python}
 	<key>lineCaptureRegister</key>
 	<string>2</string>
 	<key>name</key>
-	<string>Validate Syntax (PyCheckMate)</string>
+	<string>Validate Syntax</string>
 	<key>outputCaret</key>
 	<string>afterOutput</string>
 	<key>outputFormat</key>
 	<string>html</string>
 	<key>outputLocation</key>
 	<string>newWindow</string>
+	<key>requiredCommands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>flake8</string>
+			<key>locations</key>
+			<array>
+				<string>/usr/local/bin/flake8</string>
+				<string>/opt/local/bin/flake8</string>
+				<string>$HOME/.local/bin/flake8</string>
+			</array>
+			<key>variable</key>
+			<string>TM_PYCHECKER</string>
+		</dict>
+	</array>
 	<key>scope</key>
 	<string>source.python</string>
 	<key>uuid</key>
