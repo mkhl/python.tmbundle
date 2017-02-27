@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/bin/bash
+. "${TM_SUPPORT_PATH}/lib/bash_init.sh"
+
+: ${TM_AUTOPEP8:=autopep8}
+"$TM_AUTOPEP8" -
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>name</key>
+	<string>Format Document</string>
+	<key>outputCaret</key>
+	<string>interpolateByLine</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>replaceDocument</string>
+	<key>requiredCommands</key>
+	<array>
+		<dict>
+			<key>command</key>
+			<string>autopep8</string>
+			<key>locations</key>
+			<array>
+				<string>/usr/local/bin/autopep8</string>
+				<string>/opt/local/bin/autopep8</string>
+				<string>$HOME/.local/bin/autopep8</string>
+			</array>
+			<key>variable</key>
+			<string>TM_AUTOPEP8</string>
+		</dict>
+	</array>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>semanticClass</key>
+	<string>callback.document.will-save</string>
+	<key>uuid</key>
+	<string>F46E55D3-0EE9-4750-9701-9270D376FFBB</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
