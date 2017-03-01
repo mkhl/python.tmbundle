@@ -51,8 +51,6 @@ fi
 	<string>none</string>
 	<key>inputFormat</key>
 	<string>text</string>
-	<key>keyEquivalent</key>
-	<string>@D</string>
 	<key>name</key>
 	<string>Debug Script in Terminal</string>
 	<key>outputCaret</key>
