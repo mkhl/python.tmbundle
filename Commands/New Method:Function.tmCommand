@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env python -S
+# coding: utf-8
+
+'''Generate a snippet for a method or function
+
+Read the name of a function or method from stdin, then write a snippet for a function of that name.
+If it is known to be a method, add self to the argument list.
+If it is known to be a function, omit self from the argument list.
+Otherwise add a placeholder containing self.'''
+
+import os
+import sys
+sys.path.append(os.getenv('TM_BUNDLE_SUPPORT'))
+
+# these functions take no argument except 'self'
+selfList = (
+    'del', 'repr', 'str', 'hash', 'nonzero', 'unicode', 'len', 'iter', 'neg',
+    'pos', 'abs', 'invert', 'complex', 'int', 'long', 'float', 'oct', 'hex',
+    'index', 'enter'
+)
+# these binary operators take both 'self' and 'other' as arguments
+selfOtherList = (
+    'lt', 'le', 'eq', 'ne', 'gt', 'ge', 'cmp', 'add', 'sub', 'mul', 'floordiv',
+    'mod', 'divmod', 'lshift', 'rshift', 'and', 'xor', 'or', 'div', 'truediv',
+    'radd', 'rsub', 'rmul', 'rdiv', 'rtruediv', 'rfloordiv', 'rmod', 'rdivmod',
+    'rpow', 'rlshift', 'rrshift', 'rand', 'rxor', 'ror', 'iadd', 'isub', 'imul',
+    'idiv', 'itruediv', 'ifloordiv', 'imod', 'ilshift', 'irshift', 'iand',
+    'ixor', 'ior', 'coerce', 'pow', 'ipow'
+)
+# these functions take some argument(s) other than self
+selfAndMore = {
+         'getattr' : 'name',
+         'delattr' : 'name',
+    'getattribute' : 'name',
+         'setattr' : 'name, value',
+         'getitem' : 'key',
+         'delitem' : 'key',
+         'setitem' : 'key, value',
+             'get' : 'instance, owner',
+             'set' : 'instance, value',
+          'delete' : 'instance',
+        'contains' : 'item',
+        'setslice' : 'i, j, sequence',
+        'delslice' : 'i, j',
+            'exit' : 'exc_type, exc_value, traceback',
+}
+# these functions *can* take arguments other than self
+selfAnyList = ('init', 'call', 'new')
+
+def make_snippet(name):
+    body = '\t${4/.+/"""/}${4:docstring for %s}${4/.+/"""\n/}${4/.+/\t/}${0:pass}' % name
+
+    def snippet(args, under=True):
+        bar = '__' if under else ''
+        return 'def {3}{0}{3}({1}):\n{2}'.format(name, args, body, bar)
+
+    if name in selfList:
+        return snippet('self')
+
+    if name in selfOtherList:
+        return snippet('self, other')
+
+    if name in selfAndMore:
+        return snippet('self, ' + selfAndMore[name])
+
+    if name in selfAnyList:
+        return snippet('self${2/([^,])?.*/(?1:, )/}${2:arg}')
+
+    return snippet('${2:self${3/([^,])?.*/(?1:, )/}${3:arg}}', under=False)
+
+if __name__ == '__main__':
+    from textmate import exit
+    name = sys.stdin.read()
+    if not name:
+        exit.show_tool_tip('Please type the new function\'s name\n(or use def⇥).')
+    print make_snippet(name)
+</string>
+	<key>fallbackInput</key>
+	<string>word</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>$</string>
+	<key>name</key>
+	<string>New Method/Function</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>snippet</string>
+	<key>outputLocation</key>
+	<string>replaceInput</string>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>uuid</key>
+	<string>75929BC0-24E5-456D-9FC5-91BF4B490027</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>
