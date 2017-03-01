@@ -5,19 +5,15 @@
 	<key>content</key>
 	<string>try:
 	${1:pass}
-except${2/.+/ /}${2:${3:Exception}${4/.+/ as /}${4:e}}:
-	${5:raise $4}
-else:
-	${6:pass}
 finally:
-	${7:pass}</string>
+	${2:pass}</string>
 	<key>name</key>
-	<string>Try/Except/Else/Finally</string>
+	<string>Try/Finally</string>
 	<key>scope</key>
 	<string>source.python</string>
 	<key>tabTrigger</key>
 	<string>try</string>
 	<key>uuid</key>
-	<string>2FB8153A-1ABE-44A7-A760-763BA141724B</string>
+	<string>D1962117-3FE4-4CE2-83F0-9BECDCE8C289</string>
 </dict>
 </plist>
